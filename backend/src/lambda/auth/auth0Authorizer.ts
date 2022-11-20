@@ -65,16 +65,16 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const response = await Axios.get(jwksUrl)
   const keys = response.data.keys
   const signingKeys=keys.find(key => key.kid === jwt.header.kid)
-  logger.info('sigingKeys',signingKeys )
+  logger.info('sigingKeys', signingKeys)
   if(!signingKeys){
     throw new Error('The JWKS endpoint did not contain any keys')
   }
 
   const pemData = signingKeys.x5c[0]
-  const cert = `-----BEGIN CERTIFICATE-----\n${pemData}\n----- END CERTIFICATE-----`
+  const cert = `-----BEGIN CERTIFICATE-----\n${pemData}\n-----END CERTIFICATE-----`
 
   const verifiedToken = verify(token, cert, { algorithms: ['RS256']}) as JwtPayload
-  logger.info('verifiedToken',verifiedToken )
+  logger.info('verifiedToken', verifiedToken)
   return verifiedToken  
 }
 
